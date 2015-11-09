@@ -2,6 +2,8 @@ package hmw1.client;
 
 import hmw1.tools.Connector;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,10 +17,11 @@ import java.util.Scanner;
 public class HangmanClient {
 
 	public static void main(String[] args) {
-		
-		//testar igen..
+
 		//TODO move
-		//new Gui();
+		new Gui();
+
+	
 		
 		
 		Socket socket;
@@ -58,7 +61,4 @@ public class HangmanClient {
 		//connect
 
 	}
-	
-	
-
 }
