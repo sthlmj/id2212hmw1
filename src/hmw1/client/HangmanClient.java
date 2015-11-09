@@ -16,7 +16,7 @@ public class HangmanClient {
 
 	public static void main(String[] args) {
 		
-		
+		//test
 		//TODO move
 		//new Gui();
 		
