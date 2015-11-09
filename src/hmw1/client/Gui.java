@@ -14,74 +14,74 @@ import javax.swing.*;
 
 import java.awt.*;
 
-public class Gui {
+public class Gui extends JPanel{
 
-	private JFrame root_window;
+	private JFrame frame;
 	private JPanel window_top;
 	private JPanel window_midd;
 	private JPanel window_down;
 	
 	//private Menu connection
-	private Button button_connect;
-	private Button button_guess;
-	private TextArea output;
-	private TextField text_ipAdress;
-	private TextField text_portField;
-	private TextField text_guees;
+	private JButton button_connect;
+	private JButton button_guess;
+	private JTextArea output;
+	private JTextField text_ipAddress;
+	private JTextField text_port;
+	private JTextField text_guees;
 	private GridBagConstraints constraints;
-	 
+	private GridBagConstraints constraints2;
+	private GridBagConstraints constraints3;
 	
 	public Gui() {
 		
-		//Init frames
-		root_window = new JFrame("aa");
-		window_top = new JPanel();
-		window_midd = new JPanel();
-		window_down = new JPanel();
+		super(new GridBagLayout());
 		
-		//Set layout in each
-		root_window.setLayout(new GridBagLayout());
-		
-		//Create constraints 
+		//Make constraints rules
 		constraints = new GridBagConstraints();
         constraints.gridwidth = GridBagConstraints.REMAINDER;
  
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.weightx = 1.0;
         constraints.weighty = 1.0;
-		//window_top.setLayout(new FlowLayout(FlowLayout.LEFT));
-		//window_midd.setLayout(new FlowLayout(FlowLayout.CENTER));
-		//window_midd.setLayout(new FlowLayout());
 		
-		//Init variables		
-		text_ipAdress = new TextField("localhost",20);
-		text_portField = new TextField("1337",4);
-		button_connect = new Button("Connect");
-		output = new TextArea("test",10,10);
-		text_guees = new TextField(10);
-		button_guess = new Button("Guess");
-		root_window.setSize(500, 500);
+		//Init visual fields and set default behavior 		
+		text_ipAddress = new JTextField("localhost",20);
+		text_port = new JTextField("1337",4);
+		button_connect = new JButton("Connect");
+		output = new JTextArea("test",10,10);
+		output.setEditable(false);
 		
-		//Adding components at top
-		window_top.add(text_ipAdress,constraints);
-		window_top.add(text_portField,constraints);
-		window_top.add(button_connect,constraints);
+		text_guees = new JTextField("hea",10);
+		button_guess = new JButton("Guess");
 		
-		//Adding components at midd
-		window_midd.add(output,constraints);
+		//Adds possibility to change host and ip adress
+		add(button_connect);
+		add(text_ipAddress);
+		add(text_port,constraints);
 		
-		//Adding components at buttom
-		window_down.add(text_guees,constraints);
-		window_down.add(button_guess,constraints);
+		//Adds console output 
+		add(new JLabel("Console: "));
+		add(output,constraints);
 		
-		root_window.add(window_top,constraints);
-		root_window.add(window_midd,constraints);
-		root_window.add(window_down,constraints);
+		add(button_guess);
+		add(text_guees,constraints);
 		
-		
-
-		root_window.setVisible(true);
-		
+		createAndShowFrame();
+	}
+	
+	private void createAndShowFrame() {
+		frame = new JFrame("aa");
+	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    frame.setResizable(false);
+	    frame.add(this);
+	    //frame.setIconImage(icon);
+	    //frame.setJMenuBar(menubar_top);
+	    frame.pack();
+	    frame.setLocationRelativeTo(null);
+	    frame.setVisible(true);
 	}
 
 }
+
+
+
