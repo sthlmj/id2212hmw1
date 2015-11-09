@@ -27,7 +27,7 @@ public class HangmanClient {
 		Socket socket;
 		Connector connector;
 		try {
-			 socket = new Socket("localhost",1337);
+			 socket = new Socket("localhost",1339);
 			 connector = new Connector(socket);
 			 CommunicationThread t = new CommunicationThread(connector);
 			 t.start();

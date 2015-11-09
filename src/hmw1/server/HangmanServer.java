@@ -15,7 +15,7 @@ public class HangmanServer {
 	private static ServerSocket serverSocket;
 	private static Socket socket;
 	private static int port;
-	private static int defaultPort = 1337;
+	private static int defaultPort = 1339;
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		
