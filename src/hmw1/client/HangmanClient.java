@@ -15,11 +15,15 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class HangmanClient implements ActionListener{
-
+private static Gui gui;
+    
+    public HangmanClient(){
+        
+    }
 	public static void main(String[] args) {
 
 		//TODO move testarrr
-		new Gui();
+		gui = new Gui(new HangmanClient());
 
 	
 		
@@ -64,6 +68,13 @@ public class HangmanClient implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       String actionCommand = e.getActionCommand();
+       
+       if(actionCommand.equals("button_connect")) {
+           System.out.println("Connect button");
+       }
+       if(actionCommand.equals("button_guess")){
+           System.out.println("Guess button");
+       }
     }
 }
