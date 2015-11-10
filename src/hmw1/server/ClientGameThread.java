@@ -6,6 +6,8 @@ import hmw1.tools.Filehandler;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClientGameThread extends Thread {
 	
@@ -80,7 +82,7 @@ public class ClientGameThread extends Thread {
 								//If i character is matching at index position
 								if(currentWord.substring(i,i+1).equalsIgnoreCase(msg.substring(0, 1))) {
 									
-									System.out.println("match");
+									
 									str.append(msg.substring(0,1).toLowerCase());
 								} else {
 									if(hiddenWord.charAt(i) != '-'){
@@ -95,7 +97,13 @@ public class ClientGameThread extends Thread {
 							hiddenWord = str.toString();
 							if(!hiddenWord.contains("-")) {
 								connection.sendMsg("You win with " + failedAttempts + " number of fail attempts");
-								generateNewWord();
+                                                            try {
+                                                                Thread.sleep(2000);
+                                                            } catch (InterruptedException ex) {
+                                                               
+                                                            }
+                                                                
+                                                                generateNewWord();
 								
 								//sends hidden word
 								connection.sendMsg(hiddenWord);
@@ -108,9 +116,17 @@ public class ClientGameThread extends Thread {
 						else { // Wrong characther guess 
 							if(++failedAttempts>currentWord.length()){
 								connection.sendMsg("You loose, the correct word was" + currentWord );
-								
+								try {
+                                                                Thread.sleep(2000);
+                                                            } catch (InterruptedException ex) {
+                                                               
+                                                            }
 								connection.sendMsg("Score : Server= " + ++serverScore  + "You= " + ++clientScore );
-								
+								try {
+                                                                Thread.sleep(2000);
+                                                            } catch (InterruptedException ex) {
+                                                               
+                                                            }
 								generateNewWord();
 								
 								//sends hidden word
@@ -128,6 +144,11 @@ public class ClientGameThread extends Thread {
 						
 						if(currentWord.equalsIgnoreCase(msg)) { // victory
 							connection.sendMsg("You win with " + failedAttempts + " number of fail attempts");
+                                                        try {
+                                                                Thread.sleep(2000);
+                                                            } catch (InterruptedException ex) {
+                                                               
+                                                            }
 							generateNewWord();
 							connection.sendMsg(hiddenWord); // annouce win and give new word
 						}
