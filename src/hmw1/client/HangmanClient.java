@@ -42,7 +42,7 @@ private CommunicationThread t;
     {
         this.socket = socket;
         connector = new Connector(socket);
-        t = new CommunicationThread(connector);
+        t = new CommunicationThread(connector,gui);
         t.start();
     }
     
@@ -61,81 +61,51 @@ private CommunicationThread t;
 		//gui = new Gui(new HangmanClient());
 
                   client = new HangmanClient();
-                          
-                          
-		
-		
-		/*Socket socket;
-		Connector connector;
-		try {
-			 socket = new Socket("localhost",1337);
-			 connector = new Connector(socket);
-			 CommunicationThread t = new CommunicationThread(connector);
-			 t.start();
-				
-				
-				
-				/*Scanner sc = new Scanner(System.in);
-				while(!t.isInterrupted()){
-					String str=sc.nextLine();
-					
-					
-					
-					if(str.equals("-exit")){
-						t.interrupt();//stops all threads
-						System.out.println("Client shutdown down at timestamp: " + new Date().getTime());
-						break;
-					}
-					else{
-						connector.sendMsg(str);
-					}
-				}
-				
-		} catch (UnknownHostException e) {
-			System.out.println("Host unreachable!"); //TODO redirect to GUI output
-			
-		} catch (IOException e) {		
-		}*/
-		
-		
-		
-		//connect
-
-	}
-
+        }
+    /**
+     * If user pushes a button in the Gui
+     * @param e 
+     */    
     @Override
     public void actionPerformed(ActionEvent e) {
        String actionCommand = e.getActionCommand();
        
-       if(actionCommand.equals("button_connect")) {
-          
-           
-           if(client.gui.isConnected()) { //disconnected
+       if(actionCommand.equals("button_connect")) {//Connect button
+         
+           if(client.gui.isConnected()) { //Disconnect pressed (ending connection)
                disconnectServer();
-               
-               
                client.gui.setConnectionStatus(false);
+           } 
+           else {//Connect pressed (connecting to server)
+               
+                try {
+                    String ip = client.gui.getGivenIP();
+                    int newport = Integer.parseInt(client.gui.getPort());
+                    createConnection(new Socket(ip,newport));
+                    client.gui.setConnectionStatus(true);
+                    
+               } catch (IOException ex) {
+                   client.gui.setTextOnConsole("Connection failed.. test a another ip or port");
+                   client.gui.setConnectionStatus(false);
+                           //ex.printStackTrace();
+                         
+               } catch (NumberFormatException ex){ //user didn't enter a integer as portnumbertried to enter other value th to enter 
+                   client.gui.setTextOnConsole("Connection failed.. test a another ip or port");
+                   client.gui.setConnectionStatus(false);
+               }
                
            } 
-           else {try {
-               //connect to server
-               createConnection(new Socket("localhost",1337));
-               client.gui.setConnectionStatus(true);
-                       } catch (IOException ex) {
-                   
-                           ex.printStackTrace();
-                         
-               }
-           }
-           
-           
-           
-           
-           
-           System.out.println("Connect button");
        }
+       //User wants to guess
        if(actionCommand.equals("button_guess")){
-           System.out.println("Guess button");
+           
+           if(client.gui.isConnected()) {
+               String guess = client.gui.getGuess();
+               if(guess != null && !guess.equals("")) {
+                   connector.sendMsg(guess);
+               }   
+           }
+           //System.out.println("Guess button");
        }
     }
 
@@ -146,7 +116,13 @@ private CommunicationThread t;
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER){
-            System.out.println("Pressed Enter");
+            if(client.gui.isConnected()) {//To a guess if connected
+                String guess = client.gui.getGuess();
+               if(guess != null && !guess.equals("")) {
+                   connector.sendMsg(guess);
+                   
+               }   
+           }
         }
     }
 

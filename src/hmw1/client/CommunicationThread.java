@@ -15,19 +15,18 @@ import java.util.Date;
 public class CommunicationThread extends Thread{
 
 	private Connector connection;
-	
+	private Gui gui;
 	private long lastReceivedP = new Date().getTime();
-	public CommunicationThread(Connector c) {
+	public CommunicationThread(Connector c,Gui g) {
 		this.connection = c;
-		
+		this.gui = g;
 	}
 	
 	@Override
 	public void run() {
 		
 		while(!isInterrupted() ){
-			//Listen for messages from server
-			try {
+			try {//Listen for messages from server
 				
 				if(connection.hasMsg()){
 					
@@ -39,7 +38,10 @@ public class CommunicationThread extends Thread{
 					}
 					else{
 						System.out.println("server says: " + newMsg);//read message, send message to proper output
-					}
+                                                
+                                                gui.setTextOnConsole(newMsg);
+                                        
+                                        }
 								
 				}
 				
