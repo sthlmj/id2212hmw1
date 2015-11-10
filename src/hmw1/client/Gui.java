@@ -14,7 +14,7 @@ import javax.swing.*;
 
 import java.awt.*;
 
-public class Gui extends JPanel{
+public class Gui extends JPanel {
 
 	private JFrame frame;
 	private JPanel window_top;
@@ -70,7 +70,7 @@ public class Gui extends JPanel{
 	}
 	
 	private void createAndShowFrame() {
-		frame = new JFrame("aa");
+		frame = new JFrame("Hangman Game");
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    frame.setResizable(false);
 	    frame.add(this);
