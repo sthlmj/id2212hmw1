@@ -14,7 +14,7 @@ import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Scanner;
 
-public class HangmanClient {
+public class HangmanClient implements ActionListener{
 
 	public static void main(String[] args) {
 
@@ -61,4 +61,9 @@ public class HangmanClient {
 		//connect
 
 	}
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
