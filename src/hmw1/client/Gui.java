@@ -27,11 +27,18 @@ public class Gui extends JPanel {
 	private JTextArea output;
 	private JTextField text_ipAddress;
 	private JTextField text_port;
-	private JTextField text_guees;
+	private JTextField text_guess;
 	private GridBagConstraints constraints;
 	private GridBagConstraints constraints2;
 	private GridBagConstraints constraints3;
 	private HangmanClient parentclass;
+        private boolean isConnected = false;
+
+    public boolean isConnected() {
+        return isConnected;
+    }
+        
+        
 	public Gui(HangmanClient hangmanclient) {
           
 		super(new GridBagLayout());
@@ -50,8 +57,11 @@ public class Gui extends JPanel {
 		button_connect = new JButton("Connect");
 		output = new JTextArea("test",10,10);
 		output.setEditable(false);
+                
+                
+
 		
-		text_guees = new JTextField("hea",10);
+		text_guess = new JTextField("hea",10);
 		button_guess = new JButton("Guess");
 		
 		//Adds possibility to change host and ip adress
@@ -64,7 +74,7 @@ public class Gui extends JPanel {
 		add(output,constraints);
 		
 		add(button_guess);
-		add(text_guees,constraints);
+		add(text_guess,constraints);
 		
                 
                 //Adds listener
@@ -74,10 +84,29 @@ public class Gui extends JPanel {
                  button_guess.setActionCommand("button_guess");
                  button_guess.addActionListener(parentclass);
                  
+                 text_guess.addKeyListener(parentclass);
+                 
                  
 		createAndShowFrame();
 	}
 	
+        public void setConnectionStatus(boolean status){
+            
+            isConnected = status;
+            if(isConnected == true) {
+                button_connect.setText("Disconnect");
+            }
+            else{ 
+                button_connect.setText("Connect  ");
+            }
+             
+            text_ipAddress.setEditable(!status);
+            text_port.setEditable(!status);
+             frame.pack();
+        }
+        
+        
+        
 	private void createAndShowFrame() {
 		frame = new JFrame("Hangman Game");
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
