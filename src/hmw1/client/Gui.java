@@ -31,11 +31,11 @@ public class Gui extends JPanel {
 	private GridBagConstraints constraints;
 	private GridBagConstraints constraints2;
 	private GridBagConstraints constraints3;
-	
-	public Gui() {
-		
+	private HangmanClient parentclass;
+	public Gui(HangmanClient hangmanclient) {
+          
 		super(new GridBagLayout());
-		
+		  parentclass = hangmanclient;
 		//Make constraints rules
 		constraints = new GridBagConstraints();
         constraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -66,6 +66,15 @@ public class Gui extends JPanel {
 		add(button_guess);
 		add(text_guees,constraints);
 		
+                
+                //Adds listener
+                 button_connect.addActionListener(parentclass);
+                 button_connect.setActionCommand("button_connect");
+                 
+                 button_guess.setActionCommand("button_guess");
+                 button_guess.addActionListener(parentclass);
+                 
+                 
 		createAndShowFrame();
 	}
 	
