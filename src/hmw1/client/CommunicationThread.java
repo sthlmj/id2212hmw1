@@ -3,12 +3,10 @@ package hmw1.client;
 import hmw1.tools.Connector;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
- * This class has the responibility to listen to server messages
+ * This class has the responibility to listen to server messages and forward them to Gui
  * @author guuurris
  *
  */
@@ -28,7 +26,7 @@ public class CommunicationThread extends Thread{
 		while(!isInterrupted() ){
 			try {//Listen for messages from server
 				
-				if(connection.hasMsg()){
+				if(connection.hasMsg()) {
 					
 					String newMsg = connection.readMsg();
 					
@@ -38,21 +36,16 @@ public class CommunicationThread extends Thread{
 					}
 					else{
                                                 lastReceivedP = new Date().getTime();
-						System.out.println("server says: " + newMsg);//read message, send message to proper output
-                                                
+						
                                                 if(newMsg.contains("You win") || newMsg.contains("You loose") ){
                                                     
                                                     gui.setTextOnConsole(newMsg);
-                                                    gui.showMessage(newMsg);
-                                                    //Thread.sleep(200);
+                                                    gui.showMessage("Game information",newMsg);
                                                 }
                                                 else{
                                                     gui.setTextOnConsole(newMsg);
                                                 }
-                                                
-                                        
-                                        }
-								
+                                        }			
 				}
 				
 				Thread.sleep(200);//sleep 200ms before pinging server
@@ -67,17 +60,12 @@ public class CommunicationThread extends Thread{
 				
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				//e.printStackTrace();
+				
+			} catch (InterruptedException e) {//Sleep in thread has been interrupted
 				super.interrupt();
 			}
 		}
-		
 		connection.closeConnection();
-		System.out.println("Shuting down client thread at timestamp: " + new Date().getTime());
 	}
 }

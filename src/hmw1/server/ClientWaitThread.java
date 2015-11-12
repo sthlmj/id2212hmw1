@@ -40,14 +40,14 @@ public class ClientWaitThread extends Thread {
 	 */
 	public void run() {
 		
-		System.out.println("Server up and waiting for connection...");
+		System.out.println("Server up and waiting for connection(port="+ port  + ")...");
 		while(!isInterrupted())
 		{
 			
 		   try {
-				socket = serverSocket.accept();
+				socket = serverSocket.accept();//accept new client
 				if(socket!=null) {
-					new ClientGameThread(filehandler,threadgroup,socket).start();
+					new ClientGameThread(filehandler,threadgroup,socket).start();//start a new thread for-each new client
 				}
 					
 			} catch (IOException e ) {
@@ -75,8 +75,7 @@ public class ClientWaitThread extends Thread {
 			serverSocket.close();  
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//ignore
 		}
 		threadgroup.interrupt();
 		super.interrupt();

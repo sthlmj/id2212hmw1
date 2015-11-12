@@ -14,14 +14,15 @@ public class Connector {
 	private BufferedReader in;
 	private PrintWriter out;
 	
-	public Connector(Socket socket) {
+        /**
+         * 
+         * @param socket - for connection
+         * @throws IOException when connection couldnt be establish
+         */
+	public Connector(Socket socket) throws IOException{
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf-8"),true);
 		
-		try {
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf-8"),true);
-		} catch (IOException e) {	
-			e.printStackTrace();
-		}
 	}
 	
 	public boolean isConnected() {
@@ -46,8 +47,7 @@ public class Connector {
 			socket.close();
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			
 		} catch (NullPointerException e){
 			//ignore
 		}
