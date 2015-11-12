@@ -107,6 +107,11 @@ private CommunicationThread t;
            }
            //System.out.println("Guess button");
        }
+       
+       if(actionCommand.equals("button_showMessage_ok")) {
+           client.gui.exitShowMessage();
+       }
+       
     }
 
     @Override

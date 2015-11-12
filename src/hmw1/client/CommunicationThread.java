@@ -37,9 +37,19 @@ public class CommunicationThread extends Thread{
 						lastReceivedP = new Date().getTime();
 					}
 					else{
+                                                lastReceivedP = new Date().getTime();
 						System.out.println("server says: " + newMsg);//read message, send message to proper output
                                                 
-                                                gui.setTextOnConsole(newMsg);
+                                                if(newMsg.contains("You win") || newMsg.contains("You loose") ){
+                                                    
+                                                    gui.setTextOnConsole(newMsg);
+                                                    gui.showMessage(newMsg);
+                                                    //Thread.sleep(200);
+                                                }
+                                                else{
+                                                    gui.setTextOnConsole(newMsg);
+                                                }
+                                                
                                         
                                         }
 								

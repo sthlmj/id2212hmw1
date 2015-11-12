@@ -11,11 +11,12 @@ import java.util.logging.Logger;
 
 public class ClientGameThread extends Thread {
 	
-	private boolean keepThreadAlive ;
+	//private boolean keepThreadAlive ;
 	private Connector connection;
 	private Filehandler  words;
 	private long lastReceivedP = new Date().getTime();
 	private int failedAttempts = 0;
+        private int score = 0; // +=1 when user score and -=1 when server score 
 	private String currentWord;
 	private String hiddenWord = new String();
 	private int serverScore = 0;
@@ -24,7 +25,6 @@ public class ClientGameThread extends Thread {
 	public ClientGameThread(Filehandler filehandler, ThreadGroup tg,Socket socket) {
 		
 		super(tg,"clientG");
-		keepThreadAlive = true;
 		connection = new Connector(socket);
 		words = filehandler;
 	}
@@ -53,7 +53,7 @@ public class ClientGameThread extends Thread {
 		generateNewWord();
 		
 		//sends hidden word
-		connection.sendMsg(hiddenWord);
+		connection.sendMsg(informationMessage());
 		
 		while(!isInterrupted()){
 			
@@ -70,7 +70,7 @@ public class ClientGameThread extends Thread {
 					else if(msg.contains("start game")) { // Starts new game
 						failedAttempts = 0;
 						generateNewWord();
-						connection.sendMsg(hiddenWord);
+						connection.sendMsg(informationMessage());
 						
 					}
 					else if(msg.length() == 1) { // A character guessed
@@ -97,42 +97,30 @@ public class ClientGameThread extends Thread {
 							hiddenWord = str.toString();
 							if(!hiddenWord.contains("-")) {
 								connection.sendMsg("You win with " + failedAttempts + " number of fail attempts");
-                                                            try {
-                                                                Thread.sleep(2000);
-                                                            } catch (InterruptedException ex) {
-                                                               
-                                                            }
-                                                                
+                                                           
+                                                                ++this.score;
                                                                 generateNewWord();
 								
 								//sends hidden word
-								connection.sendMsg(hiddenWord);
+								connection.sendMsg(informationMessage());
 							}
 							else {// default presentation
-								connection.sendMsg(hiddenWord + " " + failedAttempts);
+								connection.sendMsg(informationMessage());
 							}
 							
 						}
 						else { // Wrong characther guess 
 							if(++failedAttempts>currentWord.length()){
 								connection.sendMsg("You loose, the correct word was" + currentWord );
-								try {
-                                                                Thread.sleep(2000);
-                                                            } catch (InterruptedException ex) {
-                                                               
-                                                            }
-								connection.sendMsg("Score : Server= " + ++serverScore  + "You= " + ++clientScore );
-								try {
-                                                                Thread.sleep(2000);
-                                                            } catch (InterruptedException ex) {
-                                                               
-                                                            }
+								
+								--this.score;//decrease score counter
+								
 								generateNewWord();
 								
 								//sends hidden word
-								connection.sendMsg(hiddenWord);
+								connection.sendMsg(informationMessage());
 							} else{
-								connection.sendMsg(hiddenWord + " " + failedAttempts);
+								connection.sendMsg(informationMessage());
 								
 							}
 							
@@ -144,16 +132,14 @@ public class ClientGameThread extends Thread {
 						
 						if(currentWord.equalsIgnoreCase(msg)) { // victory
 							connection.sendMsg("You win with " + failedAttempts + " number of fail attempts");
-                                                        try {
-                                                                Thread.sleep(2000);
-                                                            } catch (InterruptedException ex) {
-                                                               
-                                                            }
+                                                        
+                                                        ++this.score;//increase score counter
 							generateNewWord();
-							connection.sendMsg(hiddenWord); // annouce win and give new word
+							connection.sendMsg(informationMessage()); // annouce win and give new word
 						}
 						else {
-							connection.sendMsg(hiddenWord + " " + ++failedAttempts);
+                                                        
+							connection.sendMsg(informationMessage());
 							
 						}
 						
@@ -179,6 +165,12 @@ public class ClientGameThread extends Thread {
 	}
 	
 	
-	 
+        /**
+         * 
+         * @return - A suitible string to display in client console
+         */ 
+	private String informationMessage(){
+            return "Word : " + hiddenWord + " Word Length: " + hiddenWord.length()  + " Current Attempts: " + this.failedAttempts + " Score: " + this.score;
+        } 
 
 }

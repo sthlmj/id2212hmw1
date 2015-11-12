@@ -9,6 +9,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.TextArea;
 import java.awt.TextField;
+import java.io.File;
 
 import javax.swing.*;
 
@@ -31,6 +32,8 @@ private JTextField text_guess;
 private GridBagConstraints constraints;
 private HangmanClient parentclass;
 private boolean isConnected = false;
+
+private JDialog showMessage;
 
 public boolean isConnected() {
     return isConnected;
@@ -56,7 +59,7 @@ public Gui(HangmanClient hangmanclient) {
     button_connect = new JButton("Connect");
     output = new JTextArea("",10,10);
     output.setEditable(false);
-    output.setFont(new Font(Font.SANS_SERIF, 3, 20));
+    output.setFont(new Font(Font.SANS_SERIF, 3, 10));
 
 
 
@@ -88,7 +91,27 @@ public Gui(HangmanClient hangmanclient) {
 
     createAndShowFrame();
 }
-	
+
+//TODO 
+public void showMessage(String text) {
+    showMessage = new JDialog(frame,text);
+    JButton b = new JButton("Ok");
+    b.setActionCommand("button_showMessage_ok");
+    b.addActionListener(parentclass);
+    showMessage.setLayout(new FlowLayout(HEIGHT));
+    showMessage.add(new JTextArea(text));
+    showMessage.add(b);
+    showMessage.pack();
+    showMessage.setLocationRelativeTo(frame);
+    showMessage.setVisible(true);
+}
+
+public void exitShowMessage() {
+    if(showMessage != null) {
+        showMessage.dispose();
+    }
+}
+
 public void setConnectionStatus(boolean status){
 
     isConnected = status;
@@ -131,7 +154,10 @@ private void createAndShowFrame() {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setResizable(false);
     frame.add(this);
-    //frame.setIconImage(icon);
+    
+    ImageIcon img = new ImageIcon("src/hmw1/Hangman-icon.png");
+    frame.setIconImage(img.getImage());
+    
     //frame.setJMenuBar(menubar_top);
     frame.pack();
     frame.setLocationRelativeTo(null);
