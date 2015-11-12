@@ -5,8 +5,6 @@ import hmw1.tools.Filehandler;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.util.ArrayList;
 
 public class ClientWaitThread extends Thread {
 
@@ -14,14 +12,12 @@ public class ClientWaitThread extends Thread {
 	private static Socket socket;
 	private static int port;
 	private static final int defaultPort = 1337;
-	private boolean keepAlive;
 	private ThreadGroup threadgroup;
 	private Filehandler filehandler;
 	
 	public ClientWaitThread() throws IOException {
 		this.port = defaultPort;
 		this.serverSocket = new ServerSocket(port);
-		this.keepAlive = true;
 		threadgroup = new ThreadGroup("ClientGameThreads");
 		filehandler = new Filehandler("src/hmw1/tools/words.txt");
 	}
@@ -29,7 +25,6 @@ public class ClientWaitThread extends Thread {
 	public ClientWaitThread(int port) throws IOException {
 		this.port = port;
 		this.serverSocket = new ServerSocket(port);
-		this.keepAlive = true;
 		threadgroup = new ThreadGroup("ClientGameThreads");
 		filehandler = new Filehandler("src/hmw1/tools/words.txt");
 	}

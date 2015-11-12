@@ -50,6 +50,7 @@ public class ClientGameThread extends Thread {
 	/**
 	 * @Override Threads method
 	 */
+        @Override
 	public void run() {
 		
 		generateNewWord();
@@ -167,8 +168,7 @@ public class ClientGameThread extends Thread {
 
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//Ignore
 			}
 		}
 		connection.closeConnection();
