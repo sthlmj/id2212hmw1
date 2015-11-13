@@ -30,8 +30,19 @@ public class Connector{
 	}
 	
 	public void sendMsg(String toSend){
-		out.println(toSend);
+             final String str = toSend;
+                
+                
+            Thread sendMsgThread = new Thread(){
+                public void run() {
+                    
+                out.println(str);
 		out.flush();
+                    
+                }
+            };
+            sendMsgThread.start();
+
 		
 	}
 	public String readMsg() throws IOException{

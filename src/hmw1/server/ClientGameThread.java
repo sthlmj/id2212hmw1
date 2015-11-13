@@ -114,7 +114,7 @@ public class ClientGameThread extends Thread {
 						}
 						else { // Wrong characther guess 
 							if(++failedAttempts>currentWord.length()){
-								connection.sendMsg("You loose, the correct word was" + currentWord );
+								connection.sendMsg("You loose, the correct word was " + currentWord + " ");
 								
 								--this.score;//decrease score counter
 								

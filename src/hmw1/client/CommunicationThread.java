@@ -15,6 +15,7 @@ public class CommunicationThread extends Thread{
 	private Connector connection;
 	private Gui gui;
 	private long lastReceivedP = new Date().getTime();
+        Thread pingThread = null;
 	public CommunicationThread(Connector c,Gui g) {
 		this.connection = c;
 		this.gui = g;
@@ -22,6 +23,19 @@ public class CommunicationThread extends Thread{
 	
 	@Override
 	public void run() {
+            pingThread = new Thread(){
+                                    public void run(){
+                                       try {
+                                        Thread.sleep(200);//sleep 200ms before pinging server
+                                        connection.sendMsg("*ping*");
+                                          
+                                       } catch (InterruptedException e) {
+                                          System.out.println("aaaaa");
+                                       }
+                                        
+                                    }
+                                };
+            pingThread.start();
 		
 		while(!isInterrupted() ){
 			try {//Listen for messages from server
@@ -48,8 +62,25 @@ public class CommunicationThread extends Thread{
                                         }			
 				}
 				
-				Thread.sleep(200);//sleep 200ms before pinging server
-				connection.sendMsg("*ping*");
+                                if(pingThread != null && !pingThread.isAlive()) {
+                                    pingThread = new Thread(){
+                                    public void run(){
+                                       try {
+                                        Thread.sleep(200);//sleep 200ms before pinging server
+                                        connection.sendMsg("*ping*");
+                                          
+                                       } catch (InterruptedException e) {
+                                     
+                                       }
+                                        
+                                    }
+                                };
+                                    
+                                    pingThread.start();
+                                } 
+                                
+                                        
+                                      
 				
 				// if server timesout
 				if((new Date().getTime() -  lastReceivedP) > 2000 ){
@@ -62,8 +93,6 @@ public class CommunicationThread extends Thread{
 			} catch (IOException e) {
 				//e.printStackTrace();
 				
-			} catch (InterruptedException e) {//Sleep in thread has been interrupted
-				super.interrupt();
 			}
 		}
 		connection.closeConnection();

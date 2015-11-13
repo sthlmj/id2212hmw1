@@ -1,7 +1,6 @@
 package hmw1.client;
 
 import hmw1.tools.Connector;
-import hmw1.tools.sendThread;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -90,8 +89,7 @@ private CommunicationThread t;
            if(gui.isConnected()) {
                String guess = gui.getGuess();
                if(guess != null && !guess.equals("")) {
-                   //connector.sendMsg(guess);
-                   new sendThread(connector,guess).start();
+                   connector.sendMsg(guess);
                }   
            };
        }
