@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Connector {
+public class Connector{
 
 	private Socket socket;
 	private BufferedReader in;

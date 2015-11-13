@@ -19,8 +19,7 @@ public class ClientWaitThread extends Thread {
 		this.port = defaultPort;
 		this.serverSocket = new ServerSocket(port);
 		threadgroup = new ThreadGroup("ClientGameThreads");
-		filehandler = new Filehandler("src/hmw1/tools/words.txt");
-	}
+		filehandler = new Filehandler("src/hmw1/tools/words.txt");	}
 	
 	public ClientWaitThread(int port) throws IOException {
 		this.port = port;
