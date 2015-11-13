@@ -1,44 +1,38 @@
 package hmw1.client;
 
 import hmw1.tools.Connector;
+import hmw1.tools.sendThread;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Date;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class HangmanClient implements ActionListener, KeyListener{
+
     
-private static HangmanClient client;    
-
-
 private Gui gui;
 private Socket socket;
 private Connector connector;
 private CommunicationThread t;        
-        
-        
+    
     public HangmanClient(){
-        gui = new Gui(this);
-        
-        
+        gui = new Gui(this);  
     }
-    /**
-     * Connect to server
-     * @param socket 
-     */
-    public void createConnection(Socket socket) 
+    
+    public static void main(String[] args) {
+        new HangmanClient();
+        
+    }    
+    
+   /**
+    * Connect to server
+    * @param socket
+    * @throws IOException - throws exception if we cant establish connection
+    */
+    public void createConnection(Socket socket) throws IOException
     {
         this.socket = socket;
         connector = new Connector(socket);
@@ -47,24 +41,17 @@ private CommunicationThread t;
     }
     
     /**
-     * Disconnect from server
-     * @param args 
+     * Disconnect from server 
      */
     public void disconnectServer()
     {
-        t.interrupt();
+        t.interrupt();//Stopp communication thread
     }
     
-	public static void main(String[] args) {
-
-		//TODO move testarrr
-		//gui = new Gui(new HangmanClient());
-
-                  client = new HangmanClient();
-        }
+	
     /**
      * If user pushes a button in the Gui
-     * @param e 
+     * @param e
      */    
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -72,44 +59,45 @@ private CommunicationThread t;
        
        if(actionCommand.equals("button_connect")) {//Connect button
          
-           if(client.gui.isConnected()) { //Disconnect pressed (ending connection)
+           if(gui.isConnected()) { //Disconnect pressed (ending connection)
                disconnectServer();
-               client.gui.setConnectionStatus(false);
+               gui.setTextOnConsole(Gui.DEFAULT_CONSOLE_MESSAGE);//puts default console message
+               gui.setConnectionStatus(false);
            } 
            else {//Connect pressed (connecting to server)
                
                 try {
-                    String ip = client.gui.getGivenIP();
-                    int newport = Integer.parseInt(client.gui.getPort());
+                    String ip = gui.getGivenIP();
+                    int newport = Integer.parseInt(gui.getPort());
                     createConnection(new Socket(ip,newport));
-                    client.gui.setConnectionStatus(true);
+                    gui.setConnectionStatus(true);
                     
                } catch (IOException ex) {
-                   client.gui.setTextOnConsole("Connection failed.. test a another ip or port");
-                   client.gui.setConnectionStatus(false);
+                   gui.showMessage("Connection failure","Connection failed.. test a another ip or port");
+                   gui.setConnectionStatus(false);
                            //ex.printStackTrace();
                          
                } catch (NumberFormatException ex){ //user didn't enter a integer as portnumbertried to enter other value th to enter 
-                   client.gui.setTextOnConsole("Connection failed.. test a another ip or port");
-                   client.gui.setConnectionStatus(false);
+                   gui.showMessage("Connection failure","Connection failed.. test a another ip or port");
+                   gui.setConnectionStatus(false);
                }
                
            } 
        }
        //User wants to guess
-       if(actionCommand.equals("button_guess")){
+       if(actionCommand.equals("button_guess")){//Button pressed
            
-           if(client.gui.isConnected()) {
-               String guess = client.gui.getGuess();
+           if(gui.isConnected()) {
+               String guess = gui.getGuess();
                if(guess != null && !guess.equals("")) {
-                   connector.sendMsg(guess);
+                   //connector.sendMsg(guess);
+                   new sendThread(connector,guess).start();
                }   
-           }
-           //System.out.println("Guess button");
+           };
        }
        
        if(actionCommand.equals("button_showMessage_ok")) {
-           client.gui.exitShowMessage();
+           gui.exitShowMessage();
        }
        
     }
@@ -117,12 +105,16 @@ private CommunicationThread t;
     @Override
     public void keyTyped(KeyEvent e) {
     }
-
+    
+    /**
+     * If user pushes a key in the Gui
+     * @param e 
+     */
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER){
-            if(client.gui.isConnected()) {//To a guess if connected
-                String guess = client.gui.getGuess();
+        if (e.getKeyCode() == KeyEvent.VK_ENTER){//Enter key pressed
+            if(gui.isConnected()) {//Do a guess if connected
+                String guess = gui.getGuess();
                if(guess != null && !guess.equals("")) {
                    connector.sendMsg(guess);
                    

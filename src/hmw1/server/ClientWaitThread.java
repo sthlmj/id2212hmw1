@@ -5,8 +5,6 @@ import hmw1.tools.Filehandler;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.util.ArrayList;
 
 public class ClientWaitThread extends Thread {
 
@@ -14,22 +12,18 @@ public class ClientWaitThread extends Thread {
 	private static Socket socket;
 	private static int port;
 	private static final int defaultPort = 1337;
-	private boolean keepAlive;
 	private ThreadGroup threadgroup;
 	private Filehandler filehandler;
 	
 	public ClientWaitThread() throws IOException {
 		this.port = defaultPort;
 		this.serverSocket = new ServerSocket(port);
-		this.keepAlive = true;
 		threadgroup = new ThreadGroup("ClientGameThreads");
-		filehandler = new Filehandler("src/hmw1/tools/words.txt");
-	}
+		filehandler = new Filehandler("src/hmw1/tools/words.txt");	}
 	
 	public ClientWaitThread(int port) throws IOException {
 		this.port = port;
 		this.serverSocket = new ServerSocket(port);
-		this.keepAlive = true;
 		threadgroup = new ThreadGroup("ClientGameThreads");
 		filehandler = new Filehandler("src/hmw1/tools/words.txt");
 	}
@@ -40,14 +34,14 @@ public class ClientWaitThread extends Thread {
 	 */
 	public void run() {
 		
-		System.out.println("Server up and waiting for connection...");
+		System.out.println("Server up and waiting for connection(port="+ port  + ")...");
 		while(!isInterrupted())
 		{
 			
 		   try {
-				socket = serverSocket.accept();
+				socket = serverSocket.accept();//accept new client
 				if(socket!=null) {
-					new ClientGameThread(filehandler,threadgroup,socket).start();
+					new ClientGameThread(filehandler,threadgroup,socket).start();//start a new thread for-each new client
 				}
 					
 			} catch (IOException e ) {
@@ -75,8 +69,7 @@ public class ClientWaitThread extends Thread {
 			serverSocket.close();  
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//ignore
 		}
 		threadgroup.interrupt();
 		super.interrupt();
